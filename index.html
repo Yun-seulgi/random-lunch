@@ -3,57 +3,85 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>랜덤 런치 🚗 팀메이커 (3/4인 전용)</title>
+  <title>아이샵케어 랜덤 런치 팀메이커</title>
   <style>
     :root{
-      --bg:#f7f7fb; --card:#fff; --ink:#111; --sub:#6b7280; --line:#e8e9ef;
-      --brand:#0f172a; --brand-ink:#fff;
+      --brand:#1463ff; --brand-dark:#221815;
+      --bg:#f7f8fc; --card:#fff; --ink:var(--brand-dark); --sub:#6b7280; --line:#e8e9ef;
+      --shadow:0 10px 30px rgba(17,24,39,.08);
+      --shadow-sm:0 6px 14px rgba(17,24,39,.06);
+      --radius:16px;
     }
     *{box-sizing:border-box}
-    body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.5 system-ui,-apple-system,Segoe UI,Roboto,"Noto Sans KR",Arial}
+    body{
+      margin:0;color:var(--ink);font:14px/1.5 system-ui,-apple-system,Segoe UI,Roboto,"Noto Sans KR",Arial;
+      background:
+        radial-gradient(1200px 500px at 80% -50%, #dbe8ff 0%, transparent 60%),
+        radial-gradient(700px 450px at -10% 120%, #e7f3ff 0%, transparent 60%),
+        var(--bg);
+    }
     .wrap{max-width:1120px;margin:auto;padding:16px}
-    .toolbar{position:sticky;top:0;background:#ffffffcc;border-bottom:1px solid var(--line);backdrop-filter:blur(8px);z-index:10}
-    .toolbar .bar{display:flex;gap:12px;align-items:center;justify-content:space-between;padding:10px 16px}
-    .h1{display:flex;align-items:center;gap:8px;font-weight:800}
-    .btn{appearance:none;border:1px solid var(--line);background:#fff;border-radius:12px;padding:10px 12px;cursor:pointer}
-    .btn:disabled{opacity:.5;cursor:not-allowed}
-    .btn.primary{background:var(--brand);color:var(--brand-ink)}
-    .ctrls{display:flex;gap:8px;flex-wrap:wrap}
 
-    .grid{background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:0 6px 14px rgba(15,23,42,.06);padding:16px}
+    .toolbar{position:sticky;top:0;z-index:10;backdrop-filter:blur(10px);background:linear-gradient(180deg,#ffffffcc,#ffffffb6);border-bottom:1px solid #e7ecf4}
+    .toolbar .bar{display:flex;gap:12px;align-items:center;justify-content:space-between;padding:12px 16px}
+    .h1{display:flex;align-items:center;gap:10px;font-weight:800;color:var(--brand-dark)}
+    .h1 .brand-dot{width:8px;height:8px;border-radius:50%;background:var(--brand)}
+    .ctrls{display:flex;gap:8px;flex-wrap:wrap}
+    .btn{appearance:none;border:1px solid var(--line);background:#fff;border-radius:12px;padding:10px 14px;cursor:pointer;transition:all .15s ease;box-shadow:var(--shadow-sm)}
+    .btn:hover{transform:translateY(-1px); box-shadow:0 10px 18px rgba(17,24,39,.08)}
+    .btn:active{transform:translateY(0)}
+    .btn:disabled{opacity:.5;cursor:not-allowed;box-shadow:none}
+    .btn.primary{background:var(--brand);color:#fff;border-color:transparent}
+    .btn.primary:hover{filter:brightness(1.05)}
+
+    .panel{display:grid;grid-template-columns:2fr 1fr;gap:16px;margin:16px 0;align-items:stretch}
+    @media(max-width:860px){.panel{grid-template-columns:1fr}}
+    .box{border:1px solid var(--line);border-radius:var(--radius);background:#fff;padding:14px;height:100%;display:flex;flex-direction:column;gap:12px;box-shadow:var(--shadow-sm)}
+    .box label{display:block;color:var(--sub);font-weight:600}
+    textarea{width:100%;min-height:180px;border:1px solid var(--line);border-radius:12px;padding:12px;resize:vertical;font:14px/1.45 inherit;flex:1 1 auto;transition:border .15s, box-shadow .15s}
+    textarea:focus{outline:none;border-color:#c7d7ff;box-shadow:0 0 0 3px #dfe9ff}
+    .field{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:2px 0}
+    .field input{border:1px solid var(--line);border-radius:10px;padding:8px 10px;width:220px;transition:border .15s, box-shadow .15s}
+    .field input:focus{outline:none;border-color:#c7d7ff;box-shadow:0 0 0 3px #dfe9ff}
+    .hint{color:var(--sub);font-size:12px}
+    .brand-panel{margin-top:4px;display:flex;justify-content:center;align-items:center;padding:6px 0}
+    .brand-panel img{max-width:100%;height:auto;max-height:80px;opacity:.95}
+
+    .titlebar{display:flex;align-items:flex-end;justify-content:space-between;padding:8px 4px;margin-top:4px}
+    .titlebar h2{margin:0;font-weight:900;color:var(--brand-dark);letter-spacing:.2px}
+    .metachips{display:flex;gap:8px;flex-wrap:wrap}
+    .chip{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;background:#fff;border:1px solid #e7ecf4;box-shadow:var(--shadow-sm);font-size:12px;color:#374151}
+    .chip .dot{width:8px;height:8px;border-radius:50%;background:var(--brand)}
+
+    #captureArea.grid{background:#fff;border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px}
     .grid-cards{display:grid;grid-template-columns:repeat(1,minmax(0,1fr));gap:16px}
     @media(min-width:640px){.grid-cards{grid-template-columns:repeat(2,minmax(0,1fr))}}
     @media(min-width:1024px){.grid-cards{grid-template-columns:repeat(3,minmax(0,1fr))}}
+    .card{position:relative;border:1px solid var(--line);border-radius:var(--radius);background:var(--card);box-shadow:var(--shadow-sm);overflow:hidden;animation:pop .35s ease both}
+    .card:hover{transform:translateY(-2px);box-shadow:0 14px 26px rgba(17,24,39,.10)}
+    @keyframes pop{from{opacity:.0;transform:translateY(8px)}to{opacity:1;transform:none}}
+    .card-head{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid #eef1f6;background:linear-gradient(180deg,#fcfdff,#f7f9ff)}
+    .car-id{display:flex;align-items:center;gap:8px;color:#6b7280;font-weight:700}
+    .car-id .id-dot{width:10px;height:10px;border-radius:50%;background:var(--tone,#cbd5e1);box-shadow:inset 0 0 0 2px #ffffff}
+    .team-chip{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;background:#fff;border:1px solid var(--tone,#cbd5e1);font-weight:700}
+    .team-chip .chip-dot{width:8px;height:8px;border-radius:50%;background:var(--tone,#cbd5e1)}
+    .car-wrap{padding:14px}
+    .foot{display:flex;align-items:center;justify-content:flex-start;padding:0 14px 14px 14px;color:var(--sub);font-size:12px}
 
-    .panel{display:grid;grid-template-columns:1.5fr .9fr;gap:16px;margin:16px 0}
-    @media(max-width:860px){.panel{grid-template-columns:1fr}}
-    textarea{width:100%;height:180px;border:1px solid var(--line);border-radius:12px;padding:12px;resize:vertical;font:14px/1.45 inherit}
-    .hint{color:var(--sub);font-size:12px;margin-top:6px}
-    .box{border:1px solid var(--line);border-radius:14px;background:#fff;padding:14px}
-    .field{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:8px 0}
-    .field input{border:1px solid var(--line);border-radius:10px;padding:6px 10px;width:200px}
-    .muted{color:var(--sub)}
-
-    .titlebar{display:flex;align-items:flex-end;justify-content:space-between;padding:8px 4px}
-    .titlebar h2{margin:0;font-weight:900}
-    .subtitle{color:var(--sub)}
-
-    .card{position:relative;border:1px solid var(--line);border-radius:16px;background:var(--card);box-shadow:0 4px 12px rgba(0,0,0,.05)}
-    .card-head{display:flex;align-items:center;justify-content:space-between;padding:10px 12px}
-    .car-wrap{padding:12px}
-    .tiny{font-size:12px;color:var(--sub)}
-    .foot{display:flex;align-items:center;justify-content:space-between;padding:0 12px 12px 12px;color:var(--sub);font-size:12px}
-
-    /* 좌석 뱃지 */
-    .seat{position:absolute;transform:translate(-50%,-50%);}
+    .seat{position:absolute;transform:translate(-50%,-50%)}
     .badge{
-      position:relative;display:inline-block;background:#fff;border:1px solid var(--line);
-      border-radius:10px;padding:4px 8px;font-weight:700;white-space:nowrap;
-      box-shadow:0 1px 2px rgba(0,0,0,.06);
-      max-width:120px; overflow:hidden; text-overflow:ellipsis; /* 화면에서는 말줄임 */
+      position:relative;display:inline-block;background:#fff;border:2px solid var(--line);
+      border-radius:12px;padding:6px 12px;font-weight:800;white-space:nowrap;
+      overflow:visible;text-overflow:clip;box-shadow:0 1px 2px rgba(0,0,0,.06);
     }
     .badge.driver{background:#fff7d6;border-color:#facc15}
-    .badge .crown{position:relative;margin-right:4px;}
+    .crown-float{
+      position:absolute; left:50%; transform:translateX(-50%);
+      bottom:calc(100% + 4px);
+      background:#fff; border:2px solid #facc15; border-radius:999px;
+      padding:2px 6px; line-height:1; font-size:14px;
+      box-shadow:0 1px 2px rgba(0,0,0,.08);
+    }
 
     .error{display:flex;align-items:flex-start;gap:8px;color:#b91c1c;background:#fee2e2;border:1px solid #fecaca;border-radius:12px;padding:10px 12px;margin-top:8px}
   </style>
@@ -61,7 +89,7 @@
 <body>
   <div class="toolbar">
     <div class="bar wrap">
-      <div class="h1">🚗 아이샵케어 랜덤 런치 팀메이커 <span class="muted" id="ver"></span></div>
+      <div class="h1"><span class="brand-dot"></span>아이샵케어 랜덤 런치 팀메이커</div>
       <div class="ctrls">
         <button class="btn primary" id="btnMake">랜덤 조편성</button>
         <button class="btn" id="btnSave" disabled>PNG로 저장</button>
@@ -72,19 +100,20 @@
 
   <div class="wrap">
     <div class="panel">
-      <div>
-        <label class="muted">총 인원 이름 (쉼표로 구분)</label>
-        <textarea id="inputNames" placeholder="예) 김민수, 이지은, 박준호"></textarea>
+      <div class="box">
+        <label>총 인원 이름</label>
+        <textarea id="inputNames" placeholder="쉼표/띄어쓰기/엔터로 구분"></textarea>
         <div class="hint">현재 인원: <b id="count">0</b>명</div>
       </div>
-      <div>
-        <div class="box">
-          <div class="field">
-            <label class="muted">제목</label>
-            <input id="title" placeholder="예: 8월 랜덤 런치" />
-          </div>
-          <div class="hint">※ 5인 조는 만들지 않아요. 인원은 오직 3명/4명으로만 나뉩니다.</div>
-          <div id="error" class="error" style="display:none">⚠️ 인원을 3명/4명으로만 나눌 수 없어요. (예: 1, 2, 5명은 불가)</div>
+      <div class="box">
+        <div class="field">
+          <label class="muted">제목</label>
+          <input id="title" placeholder="예: 9월 랜덤 런치" />
+        </div>
+        <div class="hint">※ 해당 제목은 파일명으로 저장됩니다.</div>
+        <div id="error" class="error" style="display:none">⚠️ 현재 인원으로는 균등한 팀 구성이 어려워요. (예: 1, 2, 5명은 불가)</div>
+        <div class="brand-panel">
+          <img src="./ishopcare-logo.png" alt="iShopCARE 로고" />
         </div>
       </div>
     </div>
@@ -92,283 +121,316 @@
     <div class="titlebar">
       <div>
         <h2 id="outTitle">랜덤 런치</h2>
-        <div class="subtitle" id="meta"></div>
+        <div id="meta" class="metachips"></div>
       </div>
     </div>
 
-    <div class="grid" id="captureArea">
+    <div id="captureArea" class="grid">
       <div class="grid-cards" id="cards"></div>
     </div>
   </div>
 
-  <!-- html-to-image (CDN) for PNG export -->
   <script src="https://cdn.jsdelivr.net/npm/html-to-image@1.11.11/dist/html-to-image.min.js"></script>
   <script>
-    // ===== Helpers =====
     const byId = id => document.getElementById(id);
-    const $names   = byId('inputNames');
-    const $count   = byId('count');
-    const $btnMake = byId('btnMake');
-    const $btnSave = byId('btnSave');
-    const $btnCopy = byId('btnCopy');
-    const $error   = byId('error');
-    const $cards   = byId('cards');
-    const $meta    = byId('meta');
-    const $titleIn = byId('title');
-    const $titleOut= byId('outTitle');
-    const $capture = byId('captureArea');
+    const $names=byId('inputNames'), $count=byId('count');
+    const $btnMake=byId('btnMake'), $btnSave=byId('btnSave'), $btnCopy=byId('btnCopy');
+    const $error=byId('error'), $cards=byId('cards'), $meta=byId('meta');
+    const $titleIn=byId('title'), $titleOut=byId('outTitle'), $capture=byId('captureArea');
 
-    // 샘플(콤마 구분)
-    const sampleNames = [
-      '김민수','이지은','박준호','최서윤','정하늘','윤세진','오지호','문가영','한지훈','서수현',
-      '김보라','박지성','최민재','신소율','양지훈','강유진','유소라','정민호','최다혜','오민규','류지안','윤다연'
+    function splitNames(text){ return text.replace(/[，、;]+/g, ',').split(/[\s,]+/).map(s=>s.trim()).filter(Boolean); }
+    function shuffle(a){a=[...a]; for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j]]; } return a;}
+    /* fixed shuffle bug */ function shuffle(a){a=[...a]; for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]];} return a;}
+
+    /* color helpers */
+    function hexToRgb(hex){ const v=hex.replace('#',''); const n=v.length===3? v.split('').map(x=>x+x).join(''):v; return {r:parseInt(n.slice(0,2),16), g:parseInt(n.slice(2,4),16), b:parseInt(n.slice(4,6),16)};}
+    function rgbToHex(r,g,b){ const h=n=>n.toString(16).padStart(2,'0'); return `#${h(r)}${h(g)}${h(b)}`; }
+    function clamp01(x){ return Math.max(0, Math.min(255, x)); }
+    function tint(hex, p){ const {r,g,b}=hexToRgb(hex); const t=p/100; return rgbToHex(clamp01(r+(255-r)*t), clamp01(g+(255-g)*t), clamp01(b+(255-b)*t)); }
+    function shade(hex, p){ const {r,g,b}=hexToRgb(hex); const t=1-(p/100); return rgbToHex(Math.round(r*t), Math.round(g*t), Math.round(b*t)); }
+
+    /* 차종 목록 */
+    const carModels = [
+      '현대 아반떼','현대 쏘나타','현대 그랜저','현대 싼타페','현대 팰리세이드','현대 코나','현대 투싼','현대 아이오닉5','현대 아이오닉6',
+      '기아 모닝','기아 레이','기아 K3','기아 K5','기아 K8','기아 스포티지','기아 쏘렌토','기아 카니발','기아 EV6',
+      '제네시스 G70','제네시스 G80','제네시스 G90','제네시스 GV70','제네시스 GV80',
+      '테슬라 모델3','테슬라 모델Y','테슬라 모델S','테슬라 모델X',
+      'BMW 3시리즈','BMW 5시리즈','BMW X3','BMW X5','BMW i4','BMW iX',
+      '메르세데스-벤츠 C클래스','메르세데스-벤츠 E클래스','메르세데스-벤츠 GLC','메르세데스-벤츠 GLE',
+      '아우디 A4','아우디 A6','아우디 Q5','아우디 Q7','아우디 e-tron',
+      '폭스바겐 티구안','폭스바겐 골프','폭스바겐 ID.4',
+      '볼보 XC40','볼보 XC60','볼보 XC90','볼보 S60',
+      '토요타 프리우스','토요타 캠리','토요타 라브4','토요타 GR86',
+      '렉서스 ES','렉서스 NX','렉서스 RX',
+      '혼다 시빅','혼다 어코드','혼다 CR-V',
+      '닛산 알티마','닛산 로그','닛산 Z',
+      '포르쉐 911','포르쉐 카이엔','포르쉐 파나메라','포르쉐 마칸','포르쉐 타이칸',
+      '페라리 포르토피노','람보르기니 우루스','마세라티 그레칼레',
+      '포드 브롱코','포드 익스플로러','포드 머스탱',
+      '쉐보레 트래버스','쉐보레 말리부','쉐보레 트레일블레이저',
+      '지프 레니게이드','지프 랭글러','지프 그랜드체로키',
+      '르노 XM3','르노 SM6','쌍용 토레스','쌍용 렉스턴'
     ];
-    $names.value = sampleNames.join(', ');
 
-    // 쉼표 기준 분할(엔터/전각쉼표/세미콜론은 쉼표로 통일), 공백 무시, 중복 허용, 마지막 쉼표 OK
-    function splitNames(text){
-      const normalized = text
-        .replace(/\r?\n+/g, ',')     // 줄바꿈 -> 쉼표
-        .replace(/[，、;]+/g, ',');  // 전각 쉼표/세미콜론 -> 쉼표
-      return normalized
-        .split(',')
-        .map(s => s.trim())
-        .filter(s => s.length > 0);
-    }
-    function shuffle(arr){
-      const a=[...arr];
-      for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}
-      return a;
-    }
-
-    // --- 팀명 사전 (보편적 & 다양) ---
-    const adjectives = [
-      '멋진','귀여운','용감한','빠른','차분한','당당한','영리한','상큼한','든든한','유쾌한',
-      '재치있는','정직한','열정적인','상냥한','활기찬','평화로운','행운의','빛나는','깔끔한','튼튼한',
-      '강력한','부드러운','따뜻한','신속한','자유로운','신비로운','센스있는','산뜻한','푸른',
-      '은은한','단단한','기운찬','활발한','순수한','대담한','우아한','크림빛','새벽의','황금빛'
-    ];
-    const nouns = [
-      // 동물
-      '호랑이','사자','여우','늑대','판다','토끼','다람쥐','곰','고양이','강아지','펭귄','수달','코끼리','기린','돌고래','고래','상어','부엉이','독수리','참새','올빼미','두루미','거북이','하마','표범','치타',
-      // 음식/과일
-      '피자','버거','치킨','김밥','떡볶이','라면','초밥','만두','우동','파스타','타코','샌드위치','도넛','쿠키','마카롱','케이크','바나나','딸기','사과','복숭아',
-      // 캐릭터/직업(일반명)
-      '마법사','기사','닌자','해적','도깨비','요정','로봇','우주인','탐험가','용사','드래곤','히어로','연구원','요리사','정찰병','선장','발명가'
-    ];
-    function teamName(){
-      const a = adjectives[Math.floor(Math.random()*adjectives.length)];
-      const n = nouns[Math.floor(Math.random()*nouns.length)];
-      return a + ' ' + n;
-    }
-
-    // n = 3a + 4b (b 최대화) — 3/4인 전용 분할
-    function partition34(n){
-      if(n===1||n===2||n===5) return null;
-      for(let b=Math.floor(n/4); b>=0; b--){
-        const rem=n-4*b;
-        if(rem%3===0) return {a3:rem/3,b4:b};
+    function uniqueCarNames(n){
+      const pool = [...carModels];
+      const shuffled = shuffle(pool);
+      if (n <= shuffled.length) return shuffled.slice(0, n);
+      const extra = [];
+      let i = 0, round = 2;
+      while (shuffled.length + extra.length < n){
+        extra.push(`${pool[i % pool.length]} •${round}`);
+        i++; if (i % pool.length === 0) round++;
       }
-      return null;
-    }
-    function makeGroups34(list){
-      const plan = partition34(list.length); if(!plan) return null;
-      const s = shuffle(list); const groups=[]; let idx=0;
-      for(let i=0;i<plan.b4;i++){ groups.push(s.slice(idx,idx+4)); idx+=4; }
-      for(let i=0;i<plan.a3;i++){ groups.push(s.slice(idx,idx+3)); idx+=3; }
-      return groups;
-    }
-    function pickLeaders(groups){
-      return groups.map((g,i)=>{
-        const leaderIdx=Math.floor(Math.random()*g.length);
-        const leader=g[leaderIdx];
-        const others=g.filter((_,k)=>k!==leaderIdx);
-        return { teamName: teamName(), leader, members:[leader,...others] };
-      });
+      return [...shuffled, ...extra].slice(0, n);
     }
 
-    /* 좌석 좌표(차창 중앙 쪽에 위치) */
+    /* 팬톤풍 파스텔/뉴트럴 팔레트 (저채도, 고명도) */
+    function teamColors(n){
+      const BASES = [
+        '#FFBE98', /* peach fuzz vib. */
+        '#9BBFA1', /* sage */
+        '#8FB3D9', /* misty blue */
+        '#B8A1D9', /* soft lavender */
+        '#D9836B', /* terracotta */
+        '#E7CBA9', /* sand beige */
+        '#7AA7A3', /* dusty teal */
+        '#C4A484', /* camel */
+        '#8E9AAF', /* slate lilac */
+        '#A3C4B8', /* mint gray */
+        '#F2C6DE', /* powder pink */
+        '#93A8AC', /* blue gray */
+        '#F0B265', /* muted amber */
+        '#C7B9FF', /* lilac mist */
+        '#A7D3A6', /* pastel green */
+        '#D2A6A4'  /* dusty rose */
+      ];
+      const arr=[];
+      for(let i=0;i<n;i++){
+        const base = BASES[i % BASES.length];
+        arr.push({
+          base,                 // 메인
+          pale: tint(base, 88), // 아주 옅은 배경
+          dark: shade(base,18)  // 살짝 어두운 그라데이션/테두리용
+        });
+      }
+      return arr;
+    }
+
     const seatLayout = [
-      {key:'driver', x:78,  y:65},   // 앞좌석 왼쪽(조장)
-      {key:'front',  x:162, y:65},   // 앞좌석 오른쪽
-      {key:'rearL',  x:78,  y:165},  // 뒷좌석 왼쪽
-      {key:'rearR',  x:162, y:165},  // 뒷좌석 오른쪽
+      {x:78,y:65}, {x:162,y:65}, {x:78,y:165}, {x:162,y:165}
     ];
 
-    // 세련된 저채도 팔레트
-    const carPalette = ['#8da9c4','#a3c4bc','#e6b8a2','#c3aed6','#b8c0ff','#b7e4c7','#f2d0a9','#9fd8df'];
-
-    let teams = [];
-
-    // 배지 크기를 고려해 차창(rect) 안쪽으로 클램프
-    function clamp(v, min, max){ return Math.max(min, Math.min(max, v)); }
+    function shrinkToFit(badge, maxWidth){
+      const base = parseInt(getComputedStyle(badge).fontSize, 10) || 14;
+      let fs = base; badge.style.fontSize = '';
+      while (badge.scrollWidth > maxWidth && fs > 11){
+        fs -= 1; badge.style.fontSize = fs + 'px';
+      }
+    }
+    function clamp(v,min,max){return Math.max(min,Math.min(max,v));}
     function fitBadgesInsideCar(svgBox){
       const margin = 6;
-      // 창 사각형(px): <rect x="35" y="30" width="170" height="70">, <rect x="35" y="130" width="170" height="70">
-      const front = { left:35, right:205, top:30, bottom:100, width:170 };
-      const rear  = { left:35, right:205, top:130, bottom:200, width:170 };
+      const front = { left:35, right:205, top:30,  bottom:100 };
+      const rear  = { left:35, right:205, top:130, bottom:200 };
+      const seats = svgBox.querySelectorAll('.seat');
 
-      [...svgBox.querySelectorAll('.seat')].forEach((seat, idx) => {
-        const badge = seat.querySelector('.badge');
-        if(!badge) return;
-        const w = badge.offsetWidth, h = badge.offsetHeight;
-        const area = (idx <= 1) ? front : rear;
+      const adjustPair = (aIdx, bIdx, area) => {
+        const A = seats[aIdx], B = seats[bIdx];
+        const get = s => s && s.querySelector('.badge') ? { seat:s, badge:s.querySelector('.badge') } : null;
 
-        // 현재 left/top은 중심 좌표(translate(-50%,-50%))
-        const cx0 = parseFloat(seat.style.left);
-        const cy0 = parseFloat(seat.style.top);
+        const SA = get(A), SB = get(B);
+        const avail = area.right - area.left - 2*margin;
+        const gap = 8;
+        const half = Math.floor((avail - gap) / 2);
 
-        const cx = clamp(cx0, area.left + margin + w/2,  area.right  - margin - w/2);
-        const cy = clamp(cy0, area.top  + margin + h/2,  area.bottom - margin - h/2);
+        [SA, SB].forEach(X => { if(!X) return; shrinkToFit(X.badge, half); });
 
-        seat.style.left = cx + 'px';
-        seat.style.top  = cy + 'px';
-      });
+        [SA, SB].forEach((X, i) => {
+          if (!X) return;
+          const w = X.badge.offsetWidth, h = X.badge.offsetHeight;
+          const cy0 = parseFloat(X.seat.style.top);
+          const cx = i === 0 ? area.left+margin+w/2 : area.right-margin-w/2;
+          X.seat.style.left = cx + 'px';
+          X.seat.style.top  = clamp(cy0, area.top+margin+h/2, area.bottom-margin-h/2) + 'px';
+        });
+      };
+
+      adjustPair(0, 1, front);
+      adjustPair(2, 3, rear);
     }
 
-    // --- PNG 저장 시: 이름이 안 잘리도록 임시로 배지 너비 확대 후 캡처 ---
-    function prepareForExport(){
-      const AREA_W = 170;              // 창 너비
-      const MAX_W  = AREA_W - 12;      // 좌우 여백 감안(=158px)
-      document.querySelectorAll('.car-wrap > div').forEach(svgBox=>{
-        svgBox.querySelectorAll('.badge').forEach(b=>{
-          b.dataset.prevMax = b.style.maxWidth || '';
-          b.dataset.prevOverflow = b.style.textOverflow || '';
-          b.style.maxWidth = MAX_W + 'px';      // 말줄임 해제용 넓은 최대치
-          b.style.textOverflow = 'clip';        // ... 제거
-        });
-        fitBadgesInsideCar(svgBox);             // 새 너비 기준으로 재보정
-      });
+    /* 자동차 SVG (팀 텍스트 제거, 라이트 유지) */
+    function svgCar(i, theme){
+      return `
+      <svg width="240" height="230" viewBox="0 0 240 230">
+        <defs>
+          <linearGradient id="body${i}" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="${theme.base}" />
+            <stop offset="100%" stop-color="${theme.dark}" />
+          </linearGradient>
+          <linearGradient id="glass${i}" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#f8fbff" stop-opacity="0.96"/>
+            <stop offset="100%" stop-color="#e8f0ff" stop-opacity="0.92"/>
+          </linearGradient>
+          <radialGradient id="rim${i}" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#e5e7eb"/>
+            <stop offset="100%" stop-color="#9aa3af"/>
+          </radialGradient>
+          <linearGradient id="head${i}" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="#ffffff" stop-opacity="1"/>
+            <stop offset="100%" stop-color="#cde7ff" stop-opacity="1"/>
+          </linearGradient>
+          <linearGradient id="tail${i}" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="#ffb3b3"/>
+            <stop offset="100%" stop-color="#ff4545"/>
+          </linearGradient>
+          <filter id="glow${i}" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur stdDeviation="2.5" result="blur"/>
+            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
+
+        <ellipse cx="120" cy="214" rx="90" ry="10" fill="#00000018"/>
+
+        <g opacity="0.98">
+          <circle cx="36"  cy="58"  r="18" fill="#0b1220"/><circle cx="36"  cy="58"  r="9" fill="url(#rim${i})"/>
+          <circle cx="204" cy="58"  r="18" fill="#0b1220"/><circle cx="204" cy="58"  r="9" fill="url(#rim${i})"/>
+          <circle cx="36"  cy="172" r="18" fill="#0b1220"/><circle cx="36"  cy="172" r="9" fill="url(#rim${i})"/>
+          <circle cx="204" cy="172" r="18" fill="#0b1220"/><circle cx="204" cy="172"  r="9" fill="url(#rim${i})"/>
+        </g>
+
+        <path d="M26,110 C26,70, 38,44, 60,34 C85,22, 155,22, 180,34 C202,44, 214,70, 214,110 C214,150, 202,176, 180,186 C155,198, 85,198, 60,186 C38,176, 26,150, 26,110 Z"
+          fill="url(#body${i})" stroke="#0b122014" stroke-width="1.2"/>
+
+        <rect x="18"  y="95" width="10" height="30" rx="5" fill="${theme.dark}"/>
+        <rect x="212" y="95" width="10" height="30" rx="5" fill="${theme.dark}"/>
+
+        <rect x="35" y="30"  width="170" height="70"  rx="18" fill="url(#glass${i})" stroke="${theme.pale}"/>
+        <rect x="35" y="130" width="170" height="70"  rx="18" fill="url(#glass${i})" stroke="${theme.pale}"/>
+
+        <path d="M45 112 H195" stroke="#22181522" stroke-width="2"/>
+        <path d="M120 30 V200" stroke="#2218151f" stroke-width="1.2"/>
+
+        <rect x="50"  y="14" width="34" height="10" rx="6" fill="url(#head${i})" filter="url(#glow${i})" opacity=".95"/>
+        <rect x="156" y="14" width="34" height="10" rx="6" fill="url(#head${i})" filter="url(#glow${i})" opacity=".95"/>
+        <rect x="50"  y="206" width="28" height="9" rx="5" fill="url(#tail${i})" filter="url(#glow${i})" opacity=".9"/>
+        <rect x="162" y="206" width="28" height="9" rx="5" fill="url(#tail${i})" filter="url(#glow${i})" opacity=".9"/>
+      </svg>`;
     }
-    function restoreAfterExport(){
-      document.querySelectorAll('.car-wrap > div').forEach(svgBox=>{
-        svgBox.querySelectorAll('.badge').forEach(b=>{
-          b.style.maxWidth = b.dataset.prevMax || '';
-          b.style.textOverflow = b.dataset.prevOverflow || '';
-          delete b.dataset.prevMax; delete b.dataset.prevOverflow;
-        });
-        fitBadgesInsideCar(svgBox);
-      });
+
+    let teams=[], colors=[];
+
+    function renderMeta(total, teamCount){
+      $meta.innerHTML = [
+        `<span class="chip"><span class="dot"></span>총 ${total}명</span>`,
+        `<span class="chip"><span class="dot"></span>${teamCount}개 팀</span>`
+      ].join(' ');
     }
 
     function render(){
       $cards.innerHTML='';
       if(!teams.length){
-        const empty = document.createElement('div');
-        empty.className='muted';
+        const empty=document.createElement('div'); empty.className='muted';
         empty.style.textAlign='center'; empty.style.padding='60px 0';
-        empty.innerHTML='이름을 쉼표로 구분해 입력하고 <b>랜덤 조편성</b>을 눌러주세요!';
-        $cards.appendChild(empty);
-        $btnSave.disabled = true; $btnCopy.disabled = true; return;
+        empty.innerHTML='이름을 입력하고 <b>랜덤 조편성</b>을 눌러주세요!';
+        $cards.appendChild(empty); $btnSave.disabled=true; $btnCopy.disabled=true; return;
       }
-      $btnSave.disabled = false; $btnCopy.disabled = false;
+      $btnSave.disabled=false; $btnCopy.disabled=false;
 
-      teams.forEach((t, i)=>{
+      teams.forEach((t,i)=>{
+        const color = colors[i % colors.length];
         const card=document.createElement('div'); card.className='card';
         const head=document.createElement('div'); head.className='card-head';
-        head.innerHTML=`<div class="muted">${i+1}호차</div><div style="font-weight:700">${t.teamName}</div>`;
-        const tiny=document.createElement('div'); tiny.className='tiny'; tiny.style.padding='0 12px'; tiny.textContent='조장은 운전석';
+        head.innerHTML = `
+          <div class="car-id"><span class="id-dot" style="background:${color.base}"></span>${i+1}호차</div>
+          <div class="team-chip" style="border-color:${color.dark}; background:${color.pale}">
+            <span class="chip-dot" style="background:${color.base}"></span>${t.teamName}
+          </div>`;
+
         const carWrap=document.createElement('div'); carWrap.className='car-wrap';
         const svgBox=document.createElement('div'); svgBox.style.position='relative'; svgBox.style.width='240px'; svgBox.style.height='230px'; svgBox.style.margin='0 auto';
-        const color=carPalette[i%carPalette.length];
+        svgBox.innerHTML = svgCar(i, color);
 
-        // 자동차 도형
-        const svg=`<svg width="240" height="230" viewBox="0 0 240 230">
-            <defs>
-              <linearGradient id="g${i}" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stop-color="${color}" stop-opacity="0.95"/>
-                <stop offset="100%" stop-color="${color}" stop-opacity="0.75"/>
-              </linearGradient>
-            </defs>
-            <g>
-              <circle cx="30"  cy="40"  r="16" fill="#111827"/>
-              <circle cx="210" cy="40"  r="16" fill="#111827"/>
-              <circle cx="30"  cy="190" r="16" fill="#111827"/>
-              <circle cx="210" cy="190" r="16" fill="#111827"/>
-
-              <rect x="20" y="20" rx="24" ry="24" width="200" height="190" fill="url(#g${i})" stroke="#11182722"/>
-              <rect x="35" y="30"  width="170" height="70"  rx="18" fill="#ffffffcc"/>
-              <rect x="35" y="130" width="170" height="70"  rx="18" fill="#ffffffcc"/>
-
-              <rect x="90" y="8" width="60" height="16" rx="4" fill="#e5e7eb" stroke="#9ca3af"/>
-              <text x="120" y="20" text-anchor="middle" font-size="10" fill="#111827">${i+1}팀</text>
-            </g>
-          </svg>`;
-        svgBox.innerHTML = svg;
-
-        // 좌석 이름 뱃지
         const seats=[t.members[0],t.members[1],t.members[2],t.members[3]];
-        seatLayout.forEach((s,idx)=>{
-          const name = seats[idx]; if(!name) return; // 3인 조는 하나 비움
-          const seat=document.createElement('div'); seat.className='seat'; seat.style.left=s.x+'px'; seat.style.top=s.y+'px';
+        seatLayout.forEach((pos,idx)=>{
+          const name=seats[idx]; if(!name) return;
+          const seat=document.createElement('div'); seat.className='seat';
+          seat.style.left=pos.x+'px'; seat.style.top=pos.y+'px';
+
           const badge=document.createElement('div'); badge.className='badge'+(idx===0?' driver':'');
-          badge.innerHTML = (idx===0?`<span class="crown">👑</span>`:'') + name;
-          badge.title = name;
-          seat.appendChild(badge); svgBox.appendChild(seat);
+          if(idx!==0) badge.style.borderColor = color.dark; // 보더 살짝 어둡게
+          badge.textContent = name; badge.title=name;
+          seat.appendChild(badge);
+
+          if(idx===0){
+            const crown=document.createElement('div'); crown.className='crown-float'; crown.textContent='👑';
+            seat.appendChild(crown);
+          }
+
+          svgBox.appendChild(seat);
         });
 
-        // DOM 그린 후 창 내부로 보정
         requestAnimationFrame(()=>fitBadgesInsideCar(svgBox));
 
-        carWrap.appendChild(svgBox);
         const foot=document.createElement('div'); foot.className='foot';
-        const left=document.createElement('div'); left.innerHTML=`조장: <b>${t.leader}</b>`;
-        const right=document.createElement('div');
-        const btn=document.createElement('button'); btn.className='btn'; btn.textContent='좌석 다시 뽑기';
-        btn.onclick=()=>{ const others=shuffle(t.members.slice(1)); t.members=[t.leader,...others]; render(); };
-        right.appendChild(btn);
-        foot.appendChild(left); foot.appendChild(right);
+        foot.innerHTML=`조장: <b>${t.leader}</b>`;
 
-        card.appendChild(head); card.appendChild(tiny); card.appendChild(carWrap); card.appendChild(foot);
+        carWrap.appendChild(svgBox);
+        card.appendChild(head); card.appendChild(carWrap); card.appendChild(foot);
         $cards.appendChild(card);
       });
     }
 
-    function updateCounts(){ $count.textContent = splitNames($names.value).length; }
+    function updateCounts(){ $count.textContent=splitNames($names.value).length; }
 
-    function make(){
-      const names = splitNames($names.value); updateCounts();
-      $error.style.display='none';
-      if(names.length<3){ $error.style.display='block'; teams=[]; render(); return; }
-      const g = makeGroups34(names);
-      if(!g){ $error.style.display='block'; teams=[]; render(); return; }
-      teams = pickLeaders(g);
-      $titleOut.textContent = $titleIn.value.trim() || '랜덤 런치';
-      $meta.textContent = `총 ${names.length}명 · 3/4인 기준 ${teams.length}개 팀`;
-      render();
+    /* 3/4 인원 분할 로직 */
+    function partition34(n){ if(n===1||n===2||n===5) return null; for(let b=Math.floor(n/4); b>=0; b--){const rem=n-4*b; if(rem%3===0) return {a3:rem/3,b4:b}; } return null; }
+    function makeGroups34(list){
+      const plan=partition34(list.length); if(!plan) return null;
+      const s=shuffle(list); const groups=[]; let idx=0;
+      for(let i=0;i<plan.b4;i++){groups.push(s.slice(idx,idx+4)); idx+=4;}
+      for(let i=0;i<plan.a3;i++){groups.push(s.slice(idx,idx+3)); idx+=3;}
+      return groups;
     }
-
-    // 파일명: 랜덤런치_제목.png (제목이 없으면 '랜덤런치.png')
-    function sanitizedTitle(t){
-      return t.replace(/[\\/:*?"<>|]/g,'-').trim();
-    }
-    function savePng(){
-      const title  = sanitizedTitle($titleIn.value || '');
-      const fname  = title ? `랜덤런치_${title}.png` : '랜덤런치.png';
-
-      prepareForExport(); // 말줄임 해제 & 재보정
-      // 레이아웃 적용 후 캡처
-      requestAnimationFrame(()=>{
-        htmlToImage.toPng($capture,{pixelRatio:2.5,backgroundColor:'#ffffff'})
-          .then(url=>{ const a=document.createElement('a'); a.href=url; a.download=fname; a.click(); })
-          .catch(()=>alert('이미지 저장 중 오류가 발생했어요. 다시 시도해 주세요.'))
-          .finally(()=>{ restoreAfterExport(); });
+    function pickLeaders(groups){
+      const names = uniqueCarNames(groups.length);
+      return groups.map((g,i)=>{
+        const leaderIdx=Math.floor(Math.random()*g.length);
+        const leader=g[leaderIdx]; const others=g.filter((_,k)=>k!==leaderIdx);
+        return { teamName:names[i], leader, members:[leader,...others] };
       });
     }
 
-    function copyList(){
-      if(!teams.length) return;
-      const text = teams.map((t,i)=>`${i+1}팀(${t.teamName}) - 조장:${t.leader} | ${t.members.join(', ')}`).join('\n');
-      navigator.clipboard.writeText(text)
-        .then(()=>alert('팀 명단을 복사했어요!'))
-        .catch(()=>alert('복사 실패: 브라우저 권한을 확인하세요.'));
+    function make(){
+      const names=splitNames($names.value); updateCounts();
+      $error.style.display='none';
+      if(names.length<3){ $error.style.display='block'; teams=[]; render(); renderMeta(names.length,0); return; }
+      const g=makeGroups34(names); if(!g){ $error.style.display='block'; teams=[]; render(); renderMeta(names.length,0); return; }
+      teams=pickLeaders(g);
+      colors = teamColors(teams.length);
+      $titleOut.textContent=$titleIn.value.trim()||'랜덤 런치';
+      renderMeta(names.length, teams.length);
+      render();
     }
 
-    $btnMake.onclick = make;
-    $btnSave.onclick = savePng;
-    $btnCopy.onclick = copyList;
-    $names.addEventListener('input', updateCounts);
-    updateCounts();
+    function sanitizedTitle(t){ return (t||'').replace(/\s+/g,' ').trim().replace(/[\\/:*?"<>|]/g,'-'); }
+    function savePng(){
+      const title=sanitizedTitle($titleIn.value);
+      const fname= title ? `랜덤런치_${title}.png` : '랜덤런치.png';
+      document.querySelectorAll('.car-wrap > div').forEach(fitBadgesInsideCar);
+      htmlToImage.toPng($capture,{pixelRatio:2.5,backgroundColor:'#ffffff'})
+        .then(url=>{ const a=document.createElement('a'); a.href=url; a.download=fname; a.click(); })
+        .catch(()=>alert('이미지 저장 중 오류가 발생했어요. 다시 시도해 주세요.'));
+    }
+    function copyList(){
+      if(!teams.length) return;
+      const text=teams.map((t,i)=>`${i+1}팀(${t.teamName}) - 조장:${t.leader} | ${t.members.join(', ')}`).join('\n');
+      navigator.clipboard.writeText(text).then(()=>alert('팀 명단을 복사했어요!')).catch(()=>alert('복사 실패: 브라우저 권한을 확인하세요.'));
+    }
+
+    $btnMake.onclick=make; $btnSave.onclick=savePng; $btnCopy.onclick=copyList;
+    $names.addEventListener('input', updateCounts); updateCounts();
   </script>
 </body>
 </html>
