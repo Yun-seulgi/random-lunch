@@ -85,11 +85,13 @@
 
     .error{display:flex;align-items:flex-start;gap:8px;color:#b91c1c;background:#fee2e2;border:1px solid #fecaca;border-radius:12px;padding:10px 12px;margin-top:8px}
 
-    /* ▼ 저장 시 팀명 배지 줄바꿈 방지 (추가) */
+    /* 저장 시 팀명 배지 줄바꿈 방지 (유지/강화) */
     .card-head { gap: 10px; }
     .team-chip, .car-id { white-space: nowrap; word-break: keep-all; flex-shrink: 0; }
+    .team-chip { inline-size: max-content; }           /* 내용만큼 가로 확보 */
+    .team-chip .chip-text { display:inline-block; white-space:nowrap; } /* 텍스트 강제 한줄 */
 
-    /* ▼▼▼ 카운트다운 오버레이 ▼▼▼ */
+    /* 카운트다운 오버레이 */
     .overlay{position:fixed; inset:0; z-index:9999; display:none; align-items:center; justify-content:center;
       background:rgba(255,255,255,.92); backdrop-filter:blur(8px)}
     .overlay.show{display:flex}
@@ -97,7 +99,6 @@
     .count-num{font-size:96px; font-weight:900; letter-spacing:1px; color:#111827; animation:popin .5s ease}
     .count-sub{color:#6b7280; font-size:14px; margin-top:8px}
     @keyframes popin{from{transform:scale(.85);opacity:0}to{transform:scale(1);opacity:1}}
-    /* ▲▲▲ 오버레이 끝 ▲▲▲ */
   </style>
 </head>
 <body>
@@ -276,12 +277,11 @@
         const card=document.createElement('div'); card.className='card';
         const head=document.createElement('div'); head.className='card-head';
 
-        /* 추가: 팀명 공백을 NBSP로 바꿔 줄바꿈 방지 */
-        const noWrapName = t.teamName.replace(/\s/g, '\u00A0');
+        const noWrapName = t.teamName.replace(/\s/g, '\u00A0'); // 공백을 NBSP로
 
         head.innerHTML=`<div class="car-id"><span class="id-dot" style="background:${color.base}"></span>${i+1}호차</div>
           <div class="team-chip" style="border-color:${color.dark}; background:${color.pale}">
-            <span class="chip-dot" style="background:${color.base}"></span>${noWrapName}
+            <span class="chip-dot" style="background:${color.base}"></span><span class="chip-text">${noWrapName}</span>
           </div>`;
 
         const carWrap=document.createElement('div'); carWrap.className='car-wrap';
