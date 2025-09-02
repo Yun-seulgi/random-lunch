@@ -1,0 +1,414 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>아이샵케어 랜덤 런치 팀메이커</title>
+
+  <!-- Favicon: dark gray circle + centered 'R' -->
+  <link rel="icon" type="image/svg+xml"
+    href='data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><circle cx="32" cy="32" r="28" fill="%232b2b2b"/><g transform="translate(32,32)"><text x="0" y="0" text-anchor="middle" dominant-baseline="middle" font-size="40" font-weight="900" fill="%23fff">R</text></g></svg>'>
+
+  <!-- (선택) 브라우저 상단탭 색상 -->
+  <meta name="theme-color" content="#2b2b2b">
+
+  <style>
+    :root{
+      --brand:#1463ff; --brand-dark:#221815;
+      --bg:#f7f8fc; --card:#fff; --ink:var(--brand-dark); --sub:#6b7280; --line:#e8e9ef;
+      --shadow:0 10px 30px rgba(17,24,39,.08);
+      --shadow-sm:0 6px 14px rgba(17,24,39,.06);
+      --radius:16px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;color:var(--ink);font:14px/1.5 system-ui,-apple-system,Segoe UI,Roboto,"Noto Sans KR",Arial;
+      background:
+        radial-gradient(1200px 500px at 80% -50%, #dbe8ff 0%, transparent 60%),
+        radial-gradient(700px 450px at -10% 120%, #e7f3ff 0%, transparent 60%),
+        var(--bg);
+    }
+    .wrap{max-width:1120px;margin:auto;padding:16px}
+
+    .toolbar{position:sticky;top:0;z-index:10;backdrop-filter:blur(10px);background:linear-gradient(180deg,#ffffffcc,#ffffffb6);border-bottom:1px solid #e7ecf4}
+    .toolbar .bar{display:flex;gap:12px;align-items:center;justify-content:space-between;padding:12px 16px}
+    .h1{display:flex;align-items:center;gap:10px;font-weight:800;color:var(--brand-dark)}
+    .h1 .brand-dot{width:8px;height:8px;border-radius:50%;background:var(--brand)}
+    .ctrls{display:flex;gap:8px;flex-wrap:wrap}
+    .btn{appearance:none;border:1px solid var(--line);background:#fff;border-radius:12px;padding:10px 14px;cursor:pointer;transition:all .15s ease;box-shadow:var(--shadow-sm)}
+    .btn:hover{transform:translateY(-1px); box-shadow:0 10px 18px rgba(17,24,39,.08)}
+    .btn:active{transform:translateY(0)}
+    .btn:disabled{opacity:.5;cursor:not-allowed;box-shadow:none}
+    .btn.primary{background:var(--brand);color:#fff;border-color:transparent}
+    .btn.primary:hover{filter:brightness(1.05)}
+
+    .panel{display:grid;grid-template-columns:2fr 1fr;gap:16px;margin:16px 0;align-items:stretch}
+    @media(max-width:860px){.panel{grid-template-columns:1fr}}
+    .box{border:1px solid var(--line);border-radius:var(--radius);background:#fff;padding:14px;height:100%;display:flex;flex-direction:column;gap:12px;box-shadow:var(--shadow-sm)}
+    .box label{display:block;color:var(--sub);font-weight:600}
+    textarea{width:100%;min-height:180px;border:1px solid var(--line);border-radius:12px;padding:12px;resize:vertical;font:14px/1.45 inherit;transition:border .15s, box-shadow .15s}
+    textarea:focus{outline:none;border-color:#c7d7ff;box-shadow:0 0 0 3px #dfe9ff}
+    .field{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:2px 0}
+    .field input{border:1px solid var(--line);border-radius:10px;padding:8px 10px;width:220px;transition:border .15s, box-shadow .15s}
+    .field input:focus{outline:none;border-color:#c7d7ff;box-shadow:0 0 0 3px #dfe9ff}
+    .hint{color:var(--sub);font-size:12px}
+    .brand-panel{margin-top:4px;display:flex;justify-content:center;align-items:center;padding:6px 0}
+    .brand-panel img{max-width:100%;height:auto;max-height:80px;opacity:.95}
+
+    .titlebar{display:flex;align-items:flex-end;justify-content:space-between;padding:8px 4px;margin-top:4px}
+    .titlebar h2{margin:0;font-weight:900;color:var(--brand-dark);letter-spacing:.2px}
+    .metachips{display:flex;gap:8px;flex-wrap:wrap}
+    .chip{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;background:#fff;border:1px solid #e7ecf4;box-shadow:var(--shadow-sm);font-size:12px;color:#374151}
+    .chip .dot{width:8px;height:8px;border-radius:50%;background:var(--brand)}
+
+    #captureArea.grid{background:#fff;border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px}
+    .grid-cards{display:grid;grid-template-columns:repeat(1,minmax(0,1fr));gap:16px}
+    @media(min-width:640px){.grid-cards{grid-template-columns:repeat(2,minmax(0,1fr))}}
+    @media(min-width:1024px){.grid-cards{grid-template-columns:repeat(3,minmax(0,1fr))}}
+    .card{position:relative;border:1px solid var(--line);border-radius:var(--radius);background:var(--card);box-shadow:var(--shadow-sm);overflow:hidden;animation:pop .35s ease both}
+    .card:hover{transform:translateY(-2px);box-shadow:0 14px 26px rgba(17,24,39,.10)}
+    @keyframes pop{from{opacity:.0;transform:translateY(8px)}to{opacity:1;transform:none}}
+    .card-head{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid #eef1f6;background:linear-gradient(180deg,#fcfdff,#f7f9ff)}
+    .car-id{display:flex;align-items:center;gap:8px;color:#6b7280;font-weight:700}
+    .car-id .id-dot{width:10px;height:10px;border-radius:50%;background:var(--tone,#cbd5e1);box-shadow:inset 0 0 0 2px #ffffff}
+    .team-chip{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;background:#fff;border:1px solid var(--tone,#cbd5e1);font-weight:700}
+    .team-chip .chip-dot{width:8px;height:8px;border-radius:50%;background:var(--tone,#cbd5e1)}
+    .car-wrap{padding:14px}
+    .foot{display:flex;align-items:center;justify-content:flex-start;padding:0 14px 14px 14px;color:var(--sub);font-size:12px}
+
+    .seat{position:absolute;transform:translate(-50%,-50%)}
+    .badge{
+      position:relative;display:inline-block;background:#fff;border:2px solid var(--line);
+      border-radius:12px;padding:6px 12px;font-weight:800;white-space:nowrap;
+      overflow:visible;text-overflow:clip;box-shadow:0 1px 2px rgba(0,0,0,.06);
+    }
+    .badge.driver{background:#fff7d6;border-color:#facc15}
+    .crown-float{
+      position:absolute; left:50%; transform:translateX(-50%);
+      bottom:calc(100% + 4px);
+      background:#fff; border:2px solid #facc15; border-radius:999px;
+      padding:2px 6px; line-height:1; font-size:14px;
+      box-shadow:0 1px 2px rgba(0,0,0,.08);
+    }
+
+    .error{display:flex;align-items:flex-start;gap:8px;color:#b91c1c;background:#fee2e2;border:1px solid #fecaca;border-radius:12px;padding:10px 12px;margin-top:8px}
+
+    /* 저장 시 팀명 배지 줄바꿈 방지 (유지/강화) */
+    .card-head { gap: 10px; }
+    .team-chip, .car-id { white-space: nowrap; word-break: keep-all; flex-shrink: 0; }
+    .team-chip { inline-size: max-content; }           /* 내용만큼 가로 확보 */
+    .team-chip .chip-text { display:inline-block; white-space:nowrap; } /* 텍스트 강제 한줄 */
+
+    /* 카운트다운 오버레이 */
+    .overlay{position:fixed; inset:0; z-index:9999; display:none; align-items:center; justify-content:center;
+      background:rgba(255,255,255,.92); backdrop-filter:blur(8px)}
+    .overlay.show{display:flex}
+    .count-wrap{text-align:center}
+    .count-num{font-size:96px; font-weight:900; letter-spacing:1px; color:#111827; animation:popin .5s ease}
+    .count-sub{color:#6b7280; font-size:14px; margin-top:8px}
+    @keyframes popin{from{transform:scale(.85);opacity:0}to{transform:scale(1);opacity:1}}
+  </style>
+</head>
+<body>
+  <div class="toolbar">
+    <div class="bar wrap">
+      <div class="h1"><span class="brand-dot"></span>아이샵케어 랜덤 런치 팀메이커</div>
+      <div class="ctrls">
+        <button class="btn primary" id="btnMake">랜덤 조편성</button>
+        <button class="btn" id="btnSave" disabled>PNG로 저장</button>
+        <button class="btn" id="btnCopy" disabled>명단 복사</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div class="panel">
+      <div class="box">
+        <label>총 인원 이름</label>
+        <textarea id="inputNames" placeholder="쉼표/띄어쓰기/엔터로 구분"></textarea>
+        <div class="hint">현재 인원: <b id="count">0</b>명</div>
+      </div>
+      <div class="box">
+        <div class="field">
+          <label class="muted">제목</label>
+          <input id="title" placeholder="예: 9월 랜덤 런치" />
+        </div>
+        <div class="hint">※ 해당 제목은 파일명으로 저장됩니다.</div>
+        <div id="error" class="error" style="display:none">⚠️ 현재 인원으로는 균등한 팀 구성이 어려워요. (예: 1, 2, 5명은 불가)</div>
+        <div class="brand-panel">
+          <img src="./ishopcare-logo.png" alt="iShopCARE 로고" />
+        </div>
+      </div>
+    </div>
+
+    <div class="titlebar">
+      <div>
+        <h2 id="outTitle">랜덤 런치</h2>
+        <div id="meta" class="metachips"></div>
+      </div>
+    </div>
+
+    <div id="captureArea" class="grid">
+      <div class="grid-cards" id="cards"></div>
+    </div>
+  </div>
+
+  <!-- 카운트다운 오버레이 -->
+  <div id="overlay" class="overlay" aria-hidden="true">
+    <div class="count-wrap">
+      <div id="countNum" class="count-num">5</div>
+      <div class="count-sub">부릉부릉... 랜덤 런치 조를 공개합니다!</div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/html-to-image@1.11.11/dist/html-to-image.min.js"></script>
+  <script>
+    const byId = id => document.getElementById(id);
+    const $names=byId('inputNames'), $count=byId('count');
+    const $btnMake=byId('btnMake'), $btnSave=byId('btnSave'), $btnCopy=byId('btnCopy');
+    const $error=byId('error'), $cards=byId('cards'), $meta=byId('meta');
+    const $titleIn=byId('title'), $titleOut=byId('outTitle'), $capture=byId('captureArea');
+    const $overlay=byId('overlay'), $countNum=byId('countNum');
+
+    function splitNames(text){ return text.replace(/[，、;]+/g, ',').split(/[\s,]+/).map(s=>s.trim()).filter(Boolean); }
+    function shuffle(a){a=[...a]; for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j]]; } return a;}
+    /* fixed shuffle bug */ function shuffle(a){a=[...a]; for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]];} return a;}
+
+    function hexToRgb(hex){ const v=hex.replace('#',''); const n=v.length===3? v.split('').map(x=>x+x).join(''):v; return {r:parseInt(n.slice(0,2),16), g:parseInt(n.slice(2,4),16), b:parseInt(n.slice(4,6),16)};}
+    function rgbToHex(r,g,b){ const h=n=>n.toString(16).padStart(2,'0'); return `#${h(r)}${h(g)}${h(b)}`; }
+    function clamp01(x){ return Math.max(0, Math.min(255, x)); }
+    function tint(hex, p){ const {r,g,b}=hexToRgb(hex); const t=p/100; return rgbToHex(clamp01(r+(255-r)*t), clamp01(g+(255-g)*t), clamp01(b+(255-b)*t)); }
+    function shade(hex, p){ const {r,g,b}=hexToRgb(hex); const t=1-(p/100); return rgbToHex(Math.round(r*t), Math.round(g*t), Math.round(b*t)); }
+
+    const carModels=[ '현대 아반떼','현대 쏘나타','현대 그랜저','현대 싼타페','현대 팰리세이드','현대 코나','현대 투싼','현대 아이오닉5','현대 아이오닉6','기아 모닝','기아 레이','기아 K3','기아 K5','기아 K8','기아 스포티지','기아 쏘렌토','기아 카니발','기아 EV6','제네시스 G70','제네시스 G80','제네시스 G90','제네시스 GV70','제네시스 GV80','테슬라 모델3','테슬라 모델Y','테슬라 모델S','테슬라 모델X','BMW 3시리즈','BMW 5시리즈','BMW X3','BMW X5','BMW i4','BMW iX','메르세데스-벤츠 C클래스','메르세데스-벤츠 E클래스','메르세데스-벤츠 GLC','메르세데스-벤츠 GLE','아우디 A4','아우디 A6','아우디 Q5','아우디 Q7','아우디 e-tron','폭스바겐 티구안','폭스바겐 골프','폭스바겐 ID.4','볼보 XC40','볼보 XC60','볼보 XC90','볼보 S60','레인지로버 디스커버리','토요타 캠리','토요타 라브4','토요타 GR86','렉서스 ES','렉서스 NX','렉서스 RX','혼다 시빅','혼다 어코드','혼다 CR-V','닛산 알티마','닛산 로그','닛산 Z','포르쉐 911','포르쉐 카이엔','포르쉐 파나메라','포르쉐 마칸','포르쉐 타이칸','페라리 포르토피노','람보르기니 우루스','마세라티 그레칼레','포드 브롱코','포드 익스플로러','포드 머스탱','쉐보레 트래버스','쉐보레 말리부','쉐보레 트레일블레이저','지프 레니게이드','지프 랭글러','지프 그랜드체로키','르노 XM3','르노 SM6','쌍용 토레스','쌍용 렉스턴' ];
+    function uniqueCarNames(n){
+      const pool=[...carModels]; const shuffled=shuffle(pool);
+      if(n<=shuffled.length) return shuffled.slice(0,n);
+      const extra=[]; let i=0, round=2;
+      while(shuffled.length+extra.length<n){ extra.push(`${pool[i%pool.length]} •${round}`); i++; if(i%pool.length===0) round++; }
+      return [...shuffled,...extra].slice(0,n);
+    }
+
+    function teamColors(n){
+      const BASES=['#FFBE98','#9BBFA1','#8FB3D9','#B8A1D9','#D9836B','#E7CBA9','#7AA7A3','#C4A484','#8E9AAF','#A3C4B8','#F2C6DE','#93A8AC','#F0B265','#C7B9FF','#A7D3A6','#D2A6A4'];
+      const arr=[]; for(let i=0;i<n;i++){ const base=BASES[i%BASES.length]; arr.push({base,pale:tint(base,88),dark:shade(base,18)}); }
+      return arr;
+    }
+
+    const seatLayout=[{x:78,y:65},{x:162,y:65},{x:78,y:165},{x:162,y:165}];
+const AVOID_FROM = {
+  "김기섭": ["이동훈", "윤슬기"], 
+  "장재원": ["이동훈", "윤슬기"], 
+  "이영상": ["이동훈", "윤슬기"], // ← 여기만 편하게 수정 
+};
+
+// 자동으로 [a,b] 페어 배열로 변환
+const AVOID = Object.entries(AVOID_FROM)
+  .flatMap(([a, list]) => list.map(b => [a, b]));
+
+    function shrinkToFit(badge,maxWidth){ const base=parseInt(getComputedStyle(badge).fontSize,10)||14; let fs=base; badge.style.fontSize=''; while(badge.scrollWidth>maxWidth&&fs>11){ fs-=1; badge.style.fontSize=fs+'px'; } }
+    function clamp(v,min,max){return Math.max(min,Math.min(max,v));}
+    function fitBadgesInsideCar(svgBox){
+      const margin=6, front={left:35,right:205,top:30,bottom:100}, rear={left:35,right:205,top:130,bottom:200};
+      const seats=svgBox.querySelectorAll('.seat');
+      const adjustPair=(aIdx,bIdx,area)=>{
+        const A=seats[aIdx], B=seats[bIdx];
+        const get=s=>s&&s.querySelector('.badge')?{seat:s,badge:s.querySelector('.badge')}:null;
+        const SA=get(A), SB=get(B);
+        const avail=area.right-area.left-2*margin, gap=8, half=Math.floor((avail-gap)/2);
+        [SA,SB].forEach(X=>{ if(!X) return; shrinkToFit(X.badge,half); });
+        [SA,SB].forEach((X,i)=>{ if(!X) return; const w=X.badge.offsetWidth, h=X.badge.offsetHeight; const cy0=parseFloat(X.seat.style.top);
+          const cx=i===0? area.left+margin+w/2 : area.right-margin-w/2;
+          X.seat.style.left=cx+'px'; X.seat.style.top=clamp(cy0, area.top+margin+h/2, area.bottom-margin-h/2)+'px';
+        });
+      };
+      adjustPair(0,1,front); adjustPair(2,3,rear);
+    }
+
+    function svgCar(i,theme){ return `
+      <svg width="240" height="230" viewBox="0 0 240 230">
+        <defs>
+          <linearGradient id="body${i}" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="${theme.base}" />
+            <stop offset="100%" stop-color="${theme.dark}" />
+          </linearGradient>
+          <linearGradient id="glass${i}" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#f8fbff" stop-opacity="0.96"/>
+            <stop offset="100%" stop-color="#e8f0ff" stop-opacity="0.92"/>
+          </linearGradient>
+          <radialGradient id="rim${i}" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#e5e7eb"/>
+            <stop offset="100%" stop-color="#9aa3af"/>
+          </radialGradient>
+          <linearGradient id="head${i}" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="#ffffff" stop-opacity="1"/>
+            <stop offset="100%" stop-color="#cde7ff" stop-opacity="1"/>
+          </linearGradient>
+          <linearGradient id="tail${i}" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="#ffb3b3"/>
+            <stop offset="100%" stop-color="#ff4545"/>
+          </linearGradient>
+          <filter id="glow${i}" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur stdDeviation="2.5" result="blur"/>
+            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
+        <ellipse cx="120" cy="214" rx="90" ry="10" fill="#00000018"/>
+        <g opacity="0.98">
+          <circle cx="36"  cy="58"  r="18" fill="#0b1220"/><circle cx="36"  cy="58"  r="9" fill="url(#rim${i})"/>
+          <circle cx="204" cy="58"  r="18" fill="#0b1220"/><circle cx="204" cy="58"  r="9" fill="url(#rim${i})"/>
+          <circle cx="36"  cy="172" r="18" fill="#0b1220"/><circle cx="36"  cy="172" r="9" fill="url(#rim${i})"/>
+          <circle cx="204" cy="172" r="18" fill="#0b1220"/><circle cx="204" cy="172"  r="9" fill="url(#rim${i})"/>
+        </g>
+        <path d="M26,110 C26,70, 38,44, 60,34 C85,22, 155,22, 180,34 C202,44, 214,70, 214,110 C214,150, 202,176, 180,186 C155,198, 85,198, 60,186 C38,176, 26,150, 26,110 Z"
+          fill="url(#body${i})" stroke="#0b122014" stroke-width="1.2"/>
+        <rect x="18"  y="95" width="10" height="30" rx="5" fill="${theme.dark}"/>
+        <rect x="212" y="95" width="10" height="30" rx="5" fill="${theme.dark}"/>
+        <rect x="35" y="30"  width="170" height="70"  rx="18" fill="url(#glass${i})" stroke="${theme.pale}"/>
+        <rect x="35" y="130" width="170" height="70"  rx="18" fill="url(#glass${i})" stroke="${theme.pale}"/>
+        <path d="M45 112 H195" stroke="#22181522" stroke-width="2"/>
+        <path d="M120 30 V200" stroke="#2218151f" stroke-width="1.2"/>
+        <rect x="50"  y="14" width="34" height="10" rx="6" fill="url(#head${i})" filter="url(#glow${i})" opacity=".95"/>
+        <rect x="156" y="14" width="34" height="10" rx="6" fill="url(#head${i})" filter="url(#glow${i})" opacity=".95"/>
+        <rect x="50"  y="206" width="28" height="9" rx="5" fill="url(#tail${i})" filter="url(#glow${i})" opacity=".9"/>
+        <rect x="162" y="206" width="28" height="9" rx="5" fill="url(#tail${i})" filter="url(#glow${i})" opacity=".9"/>
+      </svg>`; }
+
+    let teams=[], colors=[];
+    function renderMeta(total, teamCount){
+      $meta.innerHTML=[`<span class="chip"><span class="dot"></span>총 ${total}명</span>`,`<span class="chip"><span class="dot"></span>${teamCount}개 팀</span>`].join(' ');
+    }
+
+    function render(){
+      $cards.innerHTML='';
+      if(!teams.length){
+        const empty=document.createElement('div'); empty.className='muted';
+        empty.style.textAlign='center'; empty.style.padding='60px 0';
+        empty.innerHTML='이름을 입력하고 <b>랜덤 조편성</b>을 눌러주세요!';
+        $cards.appendChild(empty); $btnSave.disabled=true; $btnCopy.disabled=true; return;
+      }
+      $btnSave.disabled=false; $btnCopy.disabled=false;
+
+      teams.forEach((t,i)=>{
+        const color=colors[i%colors.length];
+        const card=document.createElement('div'); card.className='card';
+        const head=document.createElement('div'); head.className='card-head';
+
+        const noWrapName = t.teamName.replace(/\s/g, '\u00A0'); // 공백을 NBSP로
+
+        head.innerHTML=`<div class="car-id"><span class="id-dot" style="background:${color.base}"></span>${i+1}호차</div>
+          <div class="team-chip" style="border-color:${color.dark}; background:${color.pale}">
+            <span class="chip-dot" style="background:${color.base}"></span><span class="chip-text">${noWrapName}</span>
+          </div>`;
+
+        const carWrap=document.createElement('div'); carWrap.className='car-wrap';
+        const svgBox=document.createElement('div'); svgBox.style.position='relative'; svgBox.style.width='240px'; svgBox.style.height='230px'; svgBox.style.margin='0 auto';
+        svgBox.innerHTML=svgCar(i,color);
+
+        const seats=[t.members[0],t.members[1],t.members[2],t.members[3]];
+        seatLayout.forEach((pos,idx)=>{
+          const name=seats[idx]; if(!name) return;
+          const seat=document.createElement('div'); seat.className='seat';
+          seat.style.left=pos.x+'px'; seat.style.top=pos.y+'px';
+          const badge=document.createElement('div'); badge.className='badge'+(idx===0?' driver':'');
+          if(idx!==0) badge.style.borderColor=color.dark;
+          badge.textContent=name; badge.title=name; seat.appendChild(badge);
+          if(idx===0){ const crown=document.createElement('div'); crown.className='crown-float'; crown.textContent='👑'; seat.appendChild(crown); }
+          svgBox.appendChild(seat);
+        });
+
+        requestAnimationFrame(()=>fitBadgesInsideCar(svgBox));
+        const foot=document.createElement('div'); foot.className='foot'; foot.innerHTML=`조장: <b>${t.leader}</b>`;
+        carWrap.appendChild(svgBox); card.appendChild(head); card.appendChild(carWrap); card.appendChild(foot);
+        $cards.appendChild(card);
+      });
+    }
+
+    function updateCounts(){ $count.textContent=splitNames($names.value).length; }
+
+    function partition34(n){ if(n===1||n===2||n===5) return null; for(let b=Math.floor(n/4); b>=0; b--){const rem=n-4*b; if(rem%3===0) return {a3:rem/3,b4:b}; } return null; }
+    function makeGroups34(list){
+      const plan=partition34(list.length); if(!plan) return null;
+      const s=shuffle(list); const groups=[]; let idx=0;
+      for(let i=0;i<plan.b4;i++){groups.push(s.slice(idx,idx+4)); idx+=4;}
+      for(let i=0;i<plan.a3;i++){groups.push(s.slice(idx,idx+3)); idx+=3;}
+      return groups;
+    }
+    function pickLeaders(groups){
+      const names=uniqueCarNames(groups.length);
+      return groups.map((g,i)=>{ const leaderIdx=Math.floor(Math.random()*g.length); const leader=g[leaderIdx]; const others=g.filter((_,k)=>k!==leaderIdx);
+        return { teamName:names[i], leader, members:[leader,...others] }; });
+    }
+
+  function make(){
+  const names=splitNames($names.value); updateCounts();
+  $error.style.display='none';
+  if(names.length<3){ $error.style.display='block'; teams=[]; render(); renderMeta(names.length,0); return; }
+
+  // 제약(AVOID) 만족할 때까지 재시도
+  let g = null, tries = 0, MAX_TRIES = 200;
+  while (!g && tries < MAX_TRIES) {
+    const tmp = makeGroups34(names);
+    const violates = tmp && AVOID.some(([a,b]) => tmp.some(team => team.includes(a) && team.includes(b)));
+    if (tmp && !violates) { g = tmp; break; }
+    tries++;
+  }
+  if (!g) {
+    $error.style.display = 'block';
+    $error.textContent = '⚠️인원을 조정해 주세요.';
+    teams=[]; render(); renderMeta(names.length,0); return;
+  }
+
+  teams=pickLeaders(g);
+  colors=teamColors(teams.length);
+  $titleOut.textContent=$titleIn.value.trim()||'랜덤 런치';
+  renderMeta(names.length, teams.length);
+  render();
+}
+
+    function sanitizedTitle(t){ return (t||'').replace(/\s+/g,' ').trim().replace(/[\\/:*?"<>|]/g,'-'); }
+    function savePng(){
+      const title=sanitizedTitle($titleIn.value);
+      const fname= title ? `랜덤런치_${title}.png` : '랜덤런치.png';
+      document.querySelectorAll('.car-wrap > div').forEach(fitBadgesInsideCar);
+      htmlToImage.toPng($capture,{pixelRatio:2.5,backgroundColor:'#ffffff'})
+        .then(url=>{ const a=document.createElement('a'); a.href=url; a.download=fname; a.click(); })
+        .catch(()=>alert('이미지 저장 중 오류가 발생했어요. 다시 시도해 주세요.'));
+    }
+    function copyList(){
+      if(!teams.length) return;
+      const text=teams.map((t,i)=>`${i+1}팀(${t.teamName}) - 조장:${t.leader} | ${t.members.join(', ')}`).join('\n');
+      navigator.clipboard.writeText(text).then(()=>alert('팀 명단을 복사했어요!')).catch(()=>alert('복사 실패: 브라우저 권한을 확인하세요.'));
+    }
+
+    /* 카운트다운 */
+    function startCountdown(sec, cb){
+      let n = sec;
+      $overlay.classList.add('show');
+      $overlay.setAttribute('aria-hidden','false');
+      $countNum.textContent = n;
+      $btnMake.disabled = true;
+
+      const timer = setInterval(()=>{
+        if(n <= 1){
+          $countNum.textContent = 'GO!';
+          clearInterval(timer);
+          setTimeout(()=>{
+            $overlay.classList.remove('show');
+            $overlay.setAttribute('aria-hidden','true');
+            cb();
+            $btnMake.disabled = false;
+          }, 550);
+          return;
+        }
+        n -= 1;
+        $countNum.textContent = n;
+      }, 1000);
+    }
+
+    $btnMake.onclick = () => startCountdown(5, make);
+    $btnSave.onclick=savePng; $btnCopy.onclick=copyList;
+    $names.addEventListener('input', updateCounts); updateCounts();
+  </script>
+</body>
+</html>
