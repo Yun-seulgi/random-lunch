@@ -180,7 +180,7 @@
     function tint(hex, p){ const {r,g,b}=hexToRgb(hex); const t=p/100; return rgbToHex(clamp01(r+(255-r)*t), clamp01(g+(255-g)*t), clamp01(b+(255-b)*t)); }
     function shade(hex, p){ const {r,g,b}=hexToRgb(hex); const t=1-(p/100); return rgbToHex(Math.round(r*t), Math.round(g*t), Math.round(b*t)); }
 
-const carModels=[ '현대 아반떼','현대 쏘나타','현대 그랜저','현대 싼타페','현대 팰리세이드','현대 코나','현대 투싼','현대 아이오닉5','현대 아이오닉6','기아 모닝','기아 레이','기아 K3','기아 K5','기아 K8','기아 스포티지','기아 쏘렌토','기아 카니발','기아 EV6','제네시스 G70','제네시스 G80','제네시스 G90','제네시스 GV70','제네시스 GV80','테슬라 모델3','테슬라 모델Y','테슬라 모델S','테슬라 모델X','BMW X3','BMW X5','BMW i4','BMW iX','메르세데스-벤츠 C클래스','메르세데스-벤츠 E클래스','메르세데스-벤츠 GLC','메르세데스-벤츠 GLE','아우디 A4','아우디 A6','아우디 Q5','아우디 Q7','아우디 e-tron','폭스바겐 티구안','폭스바겐 골프','폭스바겐 ID.4','볼보 XC40','볼보 XC60','볼보 XC90','볼보 S60','랜드로버 디스커버리','토요타 캠리','토요타 라브4','토요타 GR86','렉서스 ES','렉서스 NX','렉서스 RX','혼다 시빅','혼다 어코드','혼다 CR-V','닛산 알티마','닛산 로그','닛산 Z','포르쉐 911','포르쉐 카이엔','포르쉐 파나메라','포르쉐 마칸','포르쉐 타이칸','페라리 포르토피노','람보르기니 우루스','마세라티 그레칼레','포드 브롱코','포드 익스플로러','포드 머스탱','쉐보레 트래버스','쉐보레 말리부','쉐보레 트레일블레이저','지프 레니게이드','지프 랭글러','지프 그랜드체로키','르노 XM3','르노 SM6','쌍용 토레스','쌍용 렉스턴','애스턴마틴 DB12','애스턴마틴 DBS','애스턴마틴 밴티지','애스턴마틴 DBX','부가티 시론' ];
+    const carModels=[ '현대 아반떼','현대 쏘나타','현대 그랜저','현대 싼타페','현대 팰리세이드','현대 코나','현대 투싼','현대 아이오닉5','현대 아이오닉6','기아 모닝','기아 레이','기아 K3','기아 K5','기아 K8','기아 스포티지','기아 쏘렌토','기아 카니발','기아 EV6','제네시스 G70','제네시스 G80','제네시스 G90','제네시스 GV70','제네시스 GV80','테슬라 모델3','테슬라 모델Y','테슬라 모델S','테슬라 모델X','BMW 3시리즈','BMW 5시리즈','BMW X3','BMW X5','BMW i4','BMW iX','메르세데스-벤츠 C클래스','메르세데스-벤츠 E클래스','메르세데스-벤츠 GLC','메르세데스-벤츠 GLE','아우디 A4','아우디 A6','아우디 Q5','아우디 Q7','아우디 e-tron','폭스바겐 티구안','폭스바겐 골프','폭스바겐 ID.4','볼보 XC40','볼보 XC60','볼보 XC90','볼보 S60','토요타 프리우스','토요타 캠리','토요타 라브4','토요타 GR86','렉서스 ES','렉서스 NX','렉서스 RX','혼다 시빅','혼다 어코드','혼다 CR-V','닛산 알티마','닛산 로그','닛산 Z','포르쉐 911','포르쉐 카이엔','포르쉐 파나메라','포르쉐 마칸','포르쉐 타이칸','페라리 포르토피노','람보르기니 우루스','마세라티 그레칼레','포드 브롱코','포드 익스플로러','포드 머스탱','쉐보레 트래버스','쉐보레 말리부','쉐보레 트레일블레이저','지프 레니게이드','지프 랭글러','지프 그랜드체로키','르노 XM3','르노 SM6','쌍용 토레스','쌍용 렉스턴' ];
     function uniqueCarNames(n){
       const pool=[...carModels]; const shuffled=shuffle(pool);
       if(n<=shuffled.length) return shuffled.slice(0,n);
@@ -196,15 +196,6 @@ const carModels=[ '현대 아반떼','현대 쏘나타','현대 그랜저','현�
     }
 
     const seatLayout=[{x:78,y:65},{x:162,y:65},{x:78,y:165},{x:162,y:165}];
-const AVOID_FROM = {
-  "김기섭": ["이동훈", "윤슬기"], 
-  "장재원": ["이동훈", "윤슬기"], 
-  "이영상": ["이동훈", "윤슬기"], // ← 여기만 편하게 수정 
-};
-
-// 자동으로 [a,b] 페어 배열로 변환
-const AVOID = Object.entries(AVOID_FROM)
-  .flatMap(([a, list]) => list.map(b => [a, b]));
 
     function shrinkToFit(badge,maxWidth){ const base=parseInt(getComputedStyle(badge).fontSize,10)||14; let fs=base; badge.style.fontSize=''; while(badge.scrollWidth>maxWidth&&fs>11){ fs-=1; badge.style.fontSize=fs+'px'; } }
     function clamp(v,min,max){return Math.max(min,Math.min(max,v));}
@@ -340,31 +331,17 @@ const AVOID = Object.entries(AVOID_FROM)
         return { teamName:names[i], leader, members:[leader,...others] }; });
     }
 
-  function make(){
-  const names=splitNames($names.value); updateCounts();
-  $error.style.display='none';
-  if(names.length<3){ $error.style.display='block'; teams=[]; render(); renderMeta(names.length,0); return; }
-
-  // 제약(AVOID) 만족할 때까지 재시도
-  let g = null, tries = 0, MAX_TRIES = 200;
-  while (!g && tries < MAX_TRIES) {
-    const tmp = makeGroups34(names);
-    const violates = tmp && AVOID.some(([a,b]) => tmp.some(team => team.includes(a) && team.includes(b)));
-    if (tmp && !violates) { g = tmp; break; }
-    tries++;
-  }
-  if (!g) {
-    $error.style.display = 'block';
-    $error.textContent = '⚠️인원을 조정해 주세요.';
-    teams=[]; render(); renderMeta(names.length,0); return;
-  }
-
-  teams=pickLeaders(g);
-  colors=teamColors(teams.length);
-  $titleOut.textContent=$titleIn.value.trim()||'랜덤 런치';
-  renderMeta(names.length, teams.length);
-  render();
-}
+    function make(){
+      const names=splitNames($names.value); updateCounts();
+      $error.style.display='none';
+      if(names.length<3){ $error.style.display='block'; teams=[]; render(); renderMeta(names.length,0); return; }
+      const g=makeGroups34(names); if(!g){ $error.style.display='block'; teams=[]; render(); renderMeta(names.length,0); return; }
+      teams=pickLeaders(g);
+      colors=teamColors(teams.length);
+      $titleOut.textContent=$titleIn.value.trim()||'랜덤 런치';
+      renderMeta(names.length, teams.length);
+      render();
+    }
 
     function sanitizedTitle(t){ return (t||'').replace(/\s+/g,' ').trim().replace(/[\\/:*?"<>|]/g,'-'); }
     function savePng(){
@@ -412,4 +389,3 @@ const AVOID = Object.entries(AVOID_FROM)
   </script>
 </body>
 </html>
-
